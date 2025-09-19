@@ -1,4 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  FiPlus, 
+  FiEdit2, 
+  FiTrash2, 
+  FiCheck, 
+  FiX, 
+  FiSave,
+  FiCheckCircle,
+  FiAlertCircle,
+  FiLoader,
+  FiClipboard
+} from 'react-icons/fi';
 import { todoAPI } from './api';
 
 function App() {
@@ -13,6 +26,14 @@ function App() {
   useEffect(() => {
     loadTodos();
   }, []);
+
+  // Calculate stats
+  const stats = useMemo(() => {
+    const total = todos.length;
+    const completed = todos.filter(todo => todo.checked).length;
+    const pending = total - completed;
+    return { total, completed, pending };
+  }, [todos]);
 
   const loadTodos = async () => {
     try {
@@ -96,99 +117,174 @@ function App() {
   if (loading) {
     return (
       <div className="container">
-        <div className="loading">Loading todos...</div>
+        <div className="loading">
+          <div className="loading-spinner"></div>
+          <div>Loading your todos...</div>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="container">
-      <div className="header">
-        <h1>Todo App</h1>
-        <p>Manage your tasks with this simple todo application</p>
-      </div>
+      <motion.div 
+        className="header"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        <h1>✨ Todo App</h1>
+        <p>Organize your life, one task at a time</p>
+      </motion.div>
 
-      {error && (
-        <div className="error">
-          {error}
-        </div>
+      {stats.total > 0 && (
+        <motion.div 
+          className="stats"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <div className="stat-item">
+            <div className="stat-number">{stats.total}</div>
+            <div className="stat-label">Total</div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-number">{stats.completed}</div>
+            <div className="stat-label">Completed</div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-number">{stats.pending}</div>
+            <div className="stat-label">Pending</div>
+          </div>
+        </motion.div>
       )}
 
-      <form onSubmit={handleAddTodo} className="add-todo">
+      <AnimatePresence>
+        {error && (
+          <motion.div 
+            className="error"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <FiAlertCircle />
+            {error}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <motion.form 
+        onSubmit={handleAddTodo} 
+        className="add-todo"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+      >
         <input
           type="text"
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
-          placeholder="Enter a new todo..."
+          placeholder="What needs to be done?"
           maxLength={200}
         />
         <button type="submit" disabled={!newTodo.trim()}>
-          Add Todo
+          <FiPlus />
+          Add Task
         </button>
-      </form>
+      </motion.form>
 
       <ul className="todo-list">
-        {todos.length === 0 ? (
-          <li className="todo-item">
-            <span className="todo-text">No todos yet. Add one above!</span>
-          </li>
-        ) : (
-          todos.map((todo) => (
-            <li key={todo.id} className={`todo-item ${todo.checked ? 'completed' : ''}`}>
-              <input
-                type="checkbox"
-                checked={todo.checked}
-                onChange={() => handleToggleTodo(todo)}
-              />
-              
-              {editingId === todo.id ? (
-                <div className="edit-form">
+        <AnimatePresence>
+          {todos.length === 0 ? (
+            <motion.div 
+              className="empty-state"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              <FiClipboard className="empty-state-icon" />
+              <h3>No tasks yet</h3>
+              <p>Add your first task above to get started!</p>
+            </motion.div>
+          ) : (
+            todos.map((todo, index) => (
+              <motion.li 
+                key={todo.id} 
+                className={`todo-item ${todo.checked ? 'completed' : ''}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, x: -100 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+                layout
+              >
+                <label className="custom-checkbox">
                   <input
-                    type="text"
-                    value={editText}
-                    onChange={(e) => setEditText(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleEditSave(todo.id)}
-                    autoFocus
+                    type="checkbox"
+                    checked={todo.checked}
+                    onChange={() => handleToggleTodo(todo)}
                   />
-                  <button 
-                    type="button" 
-                    className="btn-save"
-                    onClick={() => handleEditSave(todo.id)}
-                  >
-                    Save
-                  </button>
-                  <button 
-                    type="button" 
-                    className="btn-cancel"
-                    onClick={handleEditCancel}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <span className={`todo-text ${todo.checked ? 'completed' : ''}`}>
-                    {todo.text}
+                  <span className="checkmark">
+                    <FiCheck className="checkmark-icon" />
                   </span>
-                  <div className="todo-actions">
+                </label>
+                
+                {editingId === todo.id ? (
+                  <motion.div 
+                    className="edit-form"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <input
+                      type="text"
+                      value={editText}
+                      onChange={(e) => setEditText(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && handleEditSave(todo.id)}
+                      autoFocus
+                    />
                     <button 
-                      className="btn-edit"
-                      onClick={() => handleEditStart(todo)}
+                      type="button" 
+                      className="btn-save"
+                      onClick={() => handleEditSave(todo.id)}
                     >
-                      Edit
+                      <FiSave />
                     </button>
                     <button 
-                      className="btn-delete"
-                      onClick={() => handleDeleteTodo(todo.id)}
+                      type="button" 
+                      className="btn-cancel"
+                      onClick={handleEditCancel}
                     >
-                      Delete
+                      <FiX />
                     </button>
-                  </div>
-                </>
-              )}
-            </li>
-          ))
-        )}
+                  </motion.div>
+                ) : (
+                  <>
+                    <span className={`todo-text ${todo.checked ? 'completed' : ''}`}>
+                      {todo.text}
+                    </span>
+                    <div className="todo-actions">
+                      <button 
+                        className="action-btn btn-edit"
+                        onClick={() => handleEditStart(todo)}
+                        title="Edit task"
+                      >
+                        <FiEdit2 />
+                      </button>
+                      <button 
+                        className="action-btn btn-delete"
+                        onClick={() => handleDeleteTodo(todo.id)}
+                        title="Delete task"
+                      >
+                        <FiTrash2 />
+                      </button>
+                    </div>
+                  </>
+                )}
+              </motion.li>
+            ))
+          )}
+        </AnimatePresence>
       </ul>
     </div>
   );
