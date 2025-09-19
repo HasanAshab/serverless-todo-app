@@ -1,5 +1,8 @@
 ## Mandatory tasks
-* CI/CD pipeline
 * Terraform
+* CI/CD pipeline
 * Readme
+* add to portfolio
+
+## Optional tasks
 * blog
