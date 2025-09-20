@@ -74,7 +74,6 @@ jobs:
       - name: Terraform Apply
         uses: dflook/terraform-apply@v2
         with:
-          path: infra
           workspace: prod
           var_file: envs/prod.tfvars
           auto_approve: true
