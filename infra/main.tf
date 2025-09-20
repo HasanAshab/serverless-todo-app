@@ -18,17 +18,26 @@ module "dynamodb_table" {
 module "backend" {
   source = "./modules/backend"
 
-  name_prefix    = local.project_name
-  environment    = var.environment
+  name_prefix       = local.project_name
+  environment       = var.environment
+  requirements_path = "${local.backend_root}/package.json"
+  handlers_dir      = "${local.backend_root}/functions"
+  handler_extension = "mjs"
 
-  functions_path = "${local.backend_root}/functions"
-  npm_requirements_path = "${local.backend_root}/package.json"
+  routes = {
+    "GET /todos"        = "list"
+    "POST /todos"       = "create"
+    "GET /todos/{id}"   = "get"
+    "PUT /todos/{id}"   = "update"
+    "DELETE /todos/{id}"= "delete"
+  }
 
-  dynamodb_table_id = module.dynamodb_table.dynamodb_table_id
+  dynamodb_table_id  = module.dynamodb_table.dynamodb_table_id
   dynamodb_table_arn = module.dynamodb_table.dynamodb_table_arn
 
   enable_deletion_protection = var.enable_deletion_protection
 }
+
 
 # module "frontend" {
 #   source = "./modules/frontend"

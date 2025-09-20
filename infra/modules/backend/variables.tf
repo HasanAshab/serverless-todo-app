@@ -1,51 +1,56 @@
-variable "environment" {
-  description = "Environment name"
-  type        = string
-}
-
 variable "name_prefix" {
-  description = "A prefix used for naming resources"
-  type        = string
+  type = string
 }
 
-variable "enable_deletion_protection" {
-  description = "Enable deletion protection"
-  type        = bool
+variable "environment" {
+  type = string
 }
 
-variable "runtime" {
-  description = "Runtime for Lambda functions"
-  type        = string
-  default = "nodejs22.x"
-}
-variable "functions_path" {
-  description = "Functions path"
-  type        = string
+variable "requirements_path" {
+  type = string
 }
 
-variable "npm_requirements_path" {
-  description = "NPM requirements path"
-  type        = string
-}
-
-variable "handler_function_name" {
-  description = "Handler function name"
-  type        = string
-  default     = "handler"
+variable "handlers_dir" {
+  type = string
 }
 
 variable "handler_extension" {
-  description = "Handler extension"
-  type        = string
-  default     = "mjs"
+  type    = string
+  default = "js"
+}
+
+variable "handler_suffix" {
+  type    = string
+  default = "handler"
+}
+
+variable "routes" {
+  type        = map(string)
+  description = <<EOT
+Map of routes to handler file prefix.
+Example:
+{
+  "GET /todos"      = "list"
+  "POST /todos"     = "create"
+  "GET /todos/{id}" = "get"
+}
+EOT
+}
+
+variable "runtime" {
+  type    = string
+  default = "nodejs18.x"
 }
 
 variable "dynamodb_table_id" {
-  description = "DynamoDB table ID"
-  type        = string
+  type = string
 }
 
 variable "dynamodb_table_arn" {
-  description = "DynamoDB table ARN"
-  type        = string  
+  type = string
+}
+
+variable "enable_deletion_protection" {
+  type    = bool
+  default = false
 }

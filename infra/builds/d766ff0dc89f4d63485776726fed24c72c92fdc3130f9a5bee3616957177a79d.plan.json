@@ -1,0 +1,1 @@
+{"filename": "builds\\d766ff0dc89f4d63485776726fed24c72c92fdc3130f9a5bee3616957177a79d.zip", "runtime": "nodejs18.x", "artifacts_dir": "builds", "build_plan": [[["zip", "./../src/backend/functions/list.mjs", null]], [["npm", "nodejs18.x", "./../src/backend/package.json", null, null]]]}
