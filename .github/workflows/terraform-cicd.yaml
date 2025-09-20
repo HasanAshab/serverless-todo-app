@@ -17,7 +17,6 @@ on:
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   INFRACOST_API_KEY: ${{ secrets.INFRACOST_API_KEY }}
-  TF_VAR_database_admin_password: Password@123
 
   # ----- AWS -----
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
