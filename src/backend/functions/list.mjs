@@ -11,7 +11,10 @@ export const handler = async (event) => {
 
   try {
     const result = await dynamoDb.send(new ScanCommand(params));
-    
+    result.Items = result.Items.map(i => {
+      i.text += ' latest version'
+      return i
+    })
     return {
       statusCode: 200,
       body: JSON.stringify(result.Items),
