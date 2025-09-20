@@ -9,7 +9,7 @@ run "demo_plan" {
   command = plan
 
   assert {
-    condition     = local.project_name == "three-tier-app"
+    condition     = local.project_name == "serverless-todo"
     error_message = "Invalid project name"
   }
 }

@@ -12,9 +12,6 @@ locals {
   }
 }
 
-######################
-# Lambda Functions
-######################
 module "lambda_functions" {
   source  = "terraform-aws-modules/lambda/aws"
   version = "8.1.0"
@@ -28,17 +25,12 @@ module "lambda_functions" {
     # add dependencies (shared layer style)
     { npm_requirements = var.requirements_path }
   ]
-
   handler = each.value.handler
   runtime = var.runtime
-  
-  environment_variables = {
-    ENVIRONMENT       = var.environment
-    DYNAMODB_TABLE = var.dynamodb_table_id
-  }
+
 
   attach_policy_json = true
-  policy_json        = templatefile("${path.module}/templates/lambda_policy.json", {
+  policy_json = templatefile("${path.module}/templates/lambda_policy.json", {
     dynamodb_arn = var.dynamodb_table_arn
   })
   allowed_triggers = {
@@ -47,19 +39,22 @@ module "lambda_functions" {
       source_arn = "${module.api_gateway.api_execution_arn}/*/*"
     }
   }
-  publish = true
+
+  artifacts_dir = "${path.root}/.terraform/lambda-builds/"
+  publish       = true
+  environment_variables = {
+    ENVIRONMENT    = var.environment
+    DYNAMODB_TABLE = var.dynamodb_table_id
+  }
 }
 
-######################
-# API Gateway (HTTP)
-######################
 module "api_gateway" {
   source  = "terraform-aws-modules/apigateway-v2/aws"
   version = "5.3.1"
 
-  name          = "${var.name_prefix}-${var.environment}-http"
-  description   = "Backend API"
-  protocol_type = "HTTP"
+  name               = "${var.name_prefix}-${var.environment}-http"
+  description        = "Backend API"
+  protocol_type      = "HTTP"
   create_domain_name = false
 
   cors_configuration = {

@@ -16,7 +16,7 @@ module "s3_bucket" {
 module "cdn" {
   source = "terraform-aws-modules/cloudfront/aws"
 
-  aliases = var.domain_names
+  # aliases = var.domain_names
 
   comment             = "CloudFront for ${module.s3_bucket.s3_bucket_id} bucket"
   enabled             = true

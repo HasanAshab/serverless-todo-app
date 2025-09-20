@@ -13,11 +13,6 @@ variable "enable_deletion_protection" {
   type        = bool
 }
 
-variable "domain_names" {
-  description = "List of domain names"
-  type        = list(string)
-}
-
 variable "cdn_price_class" {
   description = "Price class for the CloudFront distribution"
   type        = string

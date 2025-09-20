@@ -2,11 +2,10 @@ module "dynamodb_table" {
   source  = "terraform-aws-modules/dynamodb-table/aws"
   version = "5.1.0"
 
-  name         = "${local.project_name}-dynamodb-${var.environment}"
+  name         = "${local.project_name}-${var.environment}-dynamodb"
   hash_key     = "id"
-  billing_mode = "PAY_PER_REQUEST"
+  billing_mode = var.db_billing_mode
 
-  # The module requires a list of attributes, even for a single hash key.
   attributes = [
     {
       name = "id"
@@ -25,11 +24,11 @@ module "backend" {
   handler_extension = "mjs"
 
   routes = {
-    "GET /todos"        = "list"
-    "POST /todos"       = "create"
-    "GET /todos/{id}"   = "get"
-    "PUT /todos/{id}"   = "update"
-    "DELETE /todos/{id}"= "delete"
+    "GET /todos"         = "list"
+    "POST /todos"        = "create"
+    "GET /todos/{id}"    = "get"
+    "PUT /todos/{id}"    = "update"
+    "DELETE /todos/{id}" = "delete"
   }
 
   dynamodb_table_id  = module.dynamodb_table.dynamodb_table_id
@@ -39,14 +38,14 @@ module "backend" {
 }
 
 
-# module "frontend" {
-#   source = "./modules/frontend"
+module "frontend" {
+  source = "./modules/frontend"
 
-#   name_prefix     = local.project_name
-#   domain_names    = var.frontend_domains
-#   cdn_price_class = var.frontend_cdn_price_class
-#   enable_deletion_protection = var.enable_deletion_protection
-# }
+  name_prefix                = local.project_name
+  environment                = var.environment
+  cdn_price_class            = var.frontend_cdn_price_class
+  enable_deletion_protection = var.enable_deletion_protection
+}
 
 
 
