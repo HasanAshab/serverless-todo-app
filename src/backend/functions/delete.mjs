@@ -4,7 +4,7 @@ import { DynamoDBDocumentClient, DeleteCommand } from '@aws-sdk/lib-dynamodb';
 const client = new DynamoDBClient({});
 const dynamoDb = DynamoDBDocumentClient.from(client);
 
-export const deleteHandler = async (event) => {
+export const handler = async (event) => {
   const params = {
     TableName: process.env.DYNAMODB_TABLE,
     Key: {

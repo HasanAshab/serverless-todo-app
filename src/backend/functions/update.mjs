@@ -4,7 +4,7 @@ import { DynamoDBDocumentClient, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 const client = new DynamoDBClient({});
 const dynamoDb = DynamoDBDocumentClient.from(client);
 
-export const update = async (event) => {
+export const handler = async (event) => {
   const timestamp = new Date().getTime();
   const data = JSON.parse(event.body);
 

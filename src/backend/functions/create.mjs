@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 const client = new DynamoDBClient({});
 const dynamoDb = DynamoDBDocumentClient.from(client);
 
-export const create = async (event) => {
+export const handler = async (event) => {
   const timestamp = new Date().getTime();
   const data = JSON.parse(event.body);
   
