@@ -1,7 +1,7 @@
 {
   "name": "serverless-http-api-dynamodb",
   "version": "1.0.0",
-  "description": "Serverless CRUD service exposing a REST HTTP interface",
+  "description": "Serverless TODO CRUD service exposing a REST HTTP interface",
   "author": "",
   "license": "MIT",
   "type": "module",

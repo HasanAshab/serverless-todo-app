@@ -66,6 +66,8 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     environment: production
     steps:
+      - uses: actions/checkout@v4
+
       - name: Terraform Apply
         uses: dflook/terraform-apply@v2
         with:
