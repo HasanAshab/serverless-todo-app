@@ -67,7 +67,7 @@ jobs:
     environment: production
     defaults:
       run:
-        working-directory: .
+        working-directory: infra
     steps:
       - uses: actions/checkout@v4
 
@@ -77,11 +77,13 @@ jobs:
           cache: npm
           cache-dependency-path: src/backend/package-lock.json
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Initialize Terraform
+        run: terraform init
+
       - name: Terraform Apply
-        uses: dflook/terraform-apply@v2
-        with:
-          path: infra
-          workspace: prod
-          var_file: infra/envs/prod.tfvars
-          auto_approve: true
-          target: module.backend.module.lambda_functions
+        run: terraform apply -var-file=envs/prod.tfvars -auto-approve -target=module.backend.module.lambda_functions
+        env:
+          TF_WORKSPACE: prod
