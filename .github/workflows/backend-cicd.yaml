@@ -83,12 +83,12 @@ jobs:
       - name: Initialize Terraform
         run: terraform init
 
-      - name: Terraform Refresh
+      - name: Refresh Terraform State
         run: terraform refresh -var-file=envs/prod.tfvars
         env:
           TF_WORKSPACE: prod
 
-      - name: Terraform Apply
+      - name: Apply Terraform
         run: terraform apply -var-file=envs/prod.tfvars -auto-approve -target=module.backend.module.lambda_functions
         env:
           TF_WORKSPACE: prod
