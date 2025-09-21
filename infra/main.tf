@@ -38,15 +38,11 @@ module "backend" {
 }
 
 
-# module "frontend" {
-#   source = "./modules/frontend"
+module "frontend" {
+  source = "./modules/frontend"
 
-#   name_prefix                = local.project_name
-#   environment                = var.environment
-#   cdn_price_class            = var.frontend_cdn_price_class
-#   enable_deletion_protection = var.enable_deletion_protection
-# }
-
-
-
-
+  name_prefix                = local.project_name
+  environment                = var.environment
+  cdn_price_class            = var.frontend_cdn_price_class
+  enable_deletion_protection = var.enable_deletion_protection
+}
