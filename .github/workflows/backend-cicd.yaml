@@ -67,15 +67,14 @@ jobs:
     environment: production
     defaults:
       run:
-        working-directory: .
+        working-directory: infra
     steps:
       - uses: actions/checkout@v4
 
       - name: Terraform Apply
         uses: dflook/terraform-apply@v2
         with:
-          path: infra
           workspace: prod
           var_file: envs/prod.tfvars
           auto_approve: true
-          target: module.backend
+          target: module.backend.module.lambda_functions
