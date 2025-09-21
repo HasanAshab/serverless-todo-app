@@ -1,8 +1,7 @@
 ## Mandatory tasks
-* CI/CD pipeline
-  * backend
 * Readme
 * add to portfolio
+* post on linkedin
 
 ## Optional tasks
 * blog
