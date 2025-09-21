@@ -67,15 +67,16 @@ infra/
 ├── tests/           # Infrastructure testing
 └── main.tf          # Main infrastructure orchestration
 ```
+Read more at [infra/README.md](infra/README.md)
 
 ### CI/CD Pipeline
 * **Frontend**:
+  Automated deployment pipeline that uploads build artifacts to S3 (requires manual approval) on successful push to the main branch from `/src/frontend`. The React application is built, optimized, and deployed to S3, then distributed globally via CloudFront CDN. Requires manual approval for production deployment.
 ![Frontend](static/images/cicd/frontend.png)
-Automated deployment pipeline that uploads build artifacts to S3 (requires manual approval) on successful push to the main branch from `/src/frontend`. The React application is built, optimized, and deployed to S3, then distributed globally via CloudFront CDN. Requires manual approval for production deployment.
 
 * **Backend**:
+  Automated deployment pipeline that packages and deploys Lambda functions via Terraform (requires manual approval) on every successful push to the main branch from `/src/backend`. Uses rolling updates with Lambda versioning and automatic rollback capabilities.
 ![Backend](static/images/cicd/backend.png)
-Automated deployment pipeline that packages and deploys Lambda functions via Terraform (requires manual approval) on every successful push to the main branch from `/src/backend`. Uses rolling updates with Lambda versioning and automatic rollback capabilities.
 
 ### Key DevOps Practices
 
@@ -136,79 +137,6 @@ Automated deployment pipeline that packages and deploys Lambda functions via Ter
 │   └── backend/              # Lambda functions (Node.js)
 └── static/                   # Documentation assets
 ```
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- AWS CLI configured with appropriate permissions
-- Terraform >= 1.10.0
-- Docker and Docker Compose
-- Node.js 18+ and npm
-- Java 17+ and Maven
-
-### Local Development
-
-```bash
-# Clone the repository
-git clone https://github.com/HasanAshab/serverless-todo-app.git
-cd serverless-todo-app
-
-# Install frontend dependencies
-cd src/frontend
-npm install
-npm start
-
-# The frontend will be available at http://localhost:3000
-# For backend testing, deploy to AWS or use local Lambda simulation
-```
-
-### Infrastructure Deployment
-
-```bash
-# Navigate to infrastructure directory
-cd infra
-
-# Initialize Terraform
-terraform init
-
-# Create and select workspace
-terraform workspace new dev
-terraform workspace select dev
-
-# Plan and apply infrastructure
-terraform plan -var-file=./envs/dev.tfvars
-terraform apply -var-file=./envs/dev.tfvars
-
-# Get outputs (API Gateway URL, CloudFront URL)
-terraform output
-```
-
-## 🔧 Configuration
-
-### Environment Configuration
-
-Key configuration options in `envs/dev.tfvars`:
-
-```hcl
-# Environment Configuration
-environment = "dev"
-aws_region = "us-west-2"
-
-# DynamoDB Configuration
-db_billing_mode = "PAY_PER_REQUEST"
-
-# CloudFront Configuration
-frontend_cdn_price_class = "PriceClass_100"
-
-# Security Configuration
-enable_deletion_protection = false
-```
-
-### Environment-Specific Configuration
-
-- **Development** (`envs/dev.tfvars`): Pay-per-request billing, basic CDN
-- **Production** (`envs/prod.tfvars`): Optimized settings, deletion protection enabled
 
 ## 📊 Monitoring & Observability
 
