@@ -76,6 +76,6 @@ jobs:
         with:
           path: infra
           workspace: prod
-          var_file: envs/prod.tfvars
+          var_file: infra/envs/prod.tfvars
           auto_approve: true
           target: module.backend.module.lambda_functions
