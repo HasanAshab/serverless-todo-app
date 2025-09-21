@@ -12,7 +12,7 @@ export const handler = async (event) => {
   try {
     const result = await dynamoDb.send(new ScanCommand(params));
     result.Items = result.Items.map(i => {
-      i.text += ' latest (3)'
+      i.text += ' latest (4)'
       return i
     })
     return {

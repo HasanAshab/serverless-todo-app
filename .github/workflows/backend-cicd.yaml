@@ -31,7 +31,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
           cache: npm
           cache-dependency-path: src/frontend/package-lock.json
       
@@ -49,7 +49,7 @@ jobs:
       
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
           cache: npm
           cache-dependency-path: src/frontend/package-lock.json
 
@@ -70,6 +70,12 @@ jobs:
         working-directory: .
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: src/frontend/package-lock.json
 
       - name: Terraform Apply
         uses: dflook/terraform-apply@v2
